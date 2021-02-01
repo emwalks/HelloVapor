@@ -13,27 +13,38 @@ func routes(_ app: Application) throws {
         return "Hello, Emma!"
     }
 
-    // 1
     app.get("hello", ":name") { req -> String in
-    //2
     guard let name = req.parameters.get("name") else {
         throw Abort(.internalServerError)
     }
-    // 3
     return "Hello, \(name)!"
     }
 
-    // 1
+    /*
     app.post("info") { req -> String in
-    // 2
     let data = try req.content.decode(InfoData.self)
-    // 3
     return "Hello \(data.name)!"
     }
+    */
+
+    app.post("info") { req -> InfoResponse in
+    let data = try req.content.decode(InfoData.self)
+    return InfoResponse(request: data)
+    }
+
 
 }
 
 struct InfoData: Content {
+    /*
+    This struct conforms to Content which is Vapor’s wrapper around Codable. 
+    Vapor uses Content to extract the request data, whether it’s the default JSON-encoded or form URL-encoded.
+    */
  let name: String
 }
+
+struct InfoResponse: Content {
+  let request: InfoData
+}
+
 
