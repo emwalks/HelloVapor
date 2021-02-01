@@ -12,4 +12,15 @@ func routes(_ app: Application) throws {
     app.get("hello", "emma") { req -> String in
         return "Hello, Emma!"
     }
+
+    // 1
+    app.get("hello", ":name") { req -> String in
+    //2
+    guard let name = req.parameters.get("name") else {
+        throw Abort(.internalServerError)
+    }
+    // 3
+    return "Hello, \(name)!"
+    }
+
 }
